@@ -1,0 +1,66 @@
+SELECT
+  COUNT(Customer.Country) AS Purchase,
+  Customer.Country AS BillingCountry,
+  Total(Invoice.Total) AS TotalSales
+FROM Invoice
+INNER JOIN Customer
+  ON (BillingCountry IS NOT NULL AND Customer.CustomerId = Invoice.CustomerId)
+GROUP BY Customer.Country
+ORDER BY TotalSales DESC
+LIMIT 5;
+
+
+SELECT
+	Genre.Name AS Genre,
+	SUM(CASE WHEN Invoice.BillingCountry = 'USA' THEN 1 ELSE 0 END) AS 'USA',
+	SUM(CASE WHEN Invoice.BillingCountry = 'Canada' THEN 1 ELSE 0 END) AS 'Canada',
+	SUM(CASE WHEN Invoice.BillingCountry = 'France' THEN 1 ELSE 0 END) AS 'France',
+	SUM(CASE WHEN Invoice.BillingCountry = 'Brazil' THEN 1 ELSE 0 END) AS 'Brazil',
+	SUM(CASE WHEN Invoice.BillingCountry = 'Germany' THEN 1 ELSE 0 END) AS 'Germany'
+FROM InvoiceLine
+INNER JOIN Track
+  ON InvoiceLine.TrackId = Track.TrackId
+INNER JOIN MediaType
+	ON Track.MediaTypeId = MediaType.MediaTypeId
+INNER JOIN Genre
+	ON Track.GenreId = Genre.GenreId
+INNER JOIN Invoice
+	ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+INNER JOIN Customer
+	ON Invoice.CustomerId = Customer.CustomerId
+GROUP BY Genre ORDER BY Genre;
+
+
+SELECT
+  Customer.Country AS BillingCountry,
+  AVG(Invoice.Total) AS AverageSpent,
+  max(Invoice.Total) AS HighestSpent
+FROM Invoice
+INNER JOIN Customer
+  ON (BillingCountry IS NOT NULL AND Customer.CustomerId = Invoice.CustomerId)
+GROUP BY BillingCountry	
+ORDER BY AverageSpent;
+
+
+SELECT
+	Invoice.BillingCountry AS Country,
+	SUM(CASE WHEN MediaType.MediaTypeId = '1' THEN 1 ELSE 0 END) AS 'MPEG audio file',
+	SUM(CASE WHEN MediaType.MediaTypeId = '2' THEN 1 ELSE 0 END) AS 'Protected AAC audio file',
+	SUM(CASE WHEN MediaType.MediaTypeId = '3' THEN 1 ELSE 0 END) AS 'Protected MPEG-4 video file',
+	SUM(CASE WHEN MediaType.MediaTypeId = '4' THEN 1 ELSE 0 END) AS 'Purchased AAC audio file',
+	SUM(CASE WHEN MediaType.MediaTypeId = '5' THEN 1 ELSE 0 END) AS 'AAC audio file',
+	COUNT(Country) AS 'Total'
+
+FROM InvoiceLine
+INNER JOIN Track
+	ON InvoiceLine.TrackId = Track.TrackId
+INNER JOIN MediaType
+	ON Track.MediaTypeId = MediaType.MediaTypeId
+INNER JOIN Genre
+	ON Track.GenreId = Genre.GenreId
+INNER JOIN Invoice
+	ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+INNER JOIN Customer
+	ON Invoice.CustomerId = Customer.CustomerId
+GROUP BY Country ORDER BY "Total" DESC
+LIMIT 5;
