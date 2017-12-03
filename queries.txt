@@ -1,14 +1,12 @@
 SELECT
-  COUNT(Customer.Country) AS Purchase,
-  Customer.Country AS BillingCountry,
-  Total(Invoice.Total) AS TotalSales
+  Customer.Country AS Country,
+  Total(Invoice.Total) AS "Total Sales"
 FROM Invoice
 INNER JOIN Customer
   ON (BillingCountry IS NOT NULL AND Customer.CustomerId = Invoice.CustomerId)
-GROUP BY Customer.Country
-ORDER BY TotalSales DESC
+GROUP BY Country
+ORDER BY "Total Sales" DESC
 LIMIT 5;
-
 
 SELECT
 	Genre.Name AS Genre,

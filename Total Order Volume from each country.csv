@@ -1,6 +1,6 @@
-Purchase,BillingCountry,TotalSales
-91,USA,523.06
-56,Canada,303.96
-35,France,195.1
-35,Brazil,190.1
-28,Germany,156.48
+Country,Total Sales
+USA,523.06
+Canada,303.96
+France,195.1
+Brazil,190.1
+Germany,156.48
